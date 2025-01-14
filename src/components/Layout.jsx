@@ -1,8 +1,19 @@
 import React from 'react';
 
-export default function Layout({ children, onSignOut }) {
+export default function Layout({ children, onSignOut, appTheme }) {
+  // Dynamically select classes based on theme
+  let textClass = 'text-white';
+  let bgClass = 'bg-black';
+  if (appTheme === 'yellow') {
+    textClass = 'text-yellow-500';
+    bgClass = 'bg-black';
+  } else {
+    textClass = 'text-white';
+    bgClass = 'bg-black';
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col ${bgClass} ${textClass}`}>
       <nav className="bg-gray-800 text-white p-4 flex gap-4 items-center justify-between">
         <div className="flex gap-4">
           <a href="#home" className="cursor-pointer">Home</a>

@@ -8,7 +8,8 @@ Below is a list of user journeys. Follow them in the recommended order:
 2. [Use Tools](docs/journeys/use-tools.md) - Access text-to-speech and other helpful features  
 3. [Community Participation](docs/journeys/community-participation.md) - Connect with other users  
 4. [Adjust Settings](docs/journeys/adjust-settings.md) - Customize voice options, color contrast, and more  
-5. [Earn Rewards](docs/journeys/earn-rewards.md) - Learn how to interact and get rewarded
+5. [Earn Rewards](docs/journeys/earn-rewards.md) - Learn how to interact and get rewarded  
+6. [Persistent Settings](docs/journeys/persistent-settings.md) - Keep your settings across sessions
 
 ## External APIs Used
 
@@ -16,6 +17,8 @@ Below is a list of user journeys. Follow them in the recommended order:
 - **Progressier**: To provide PWA functionality.  
 - **Umami**: For analytics tracking.  
 - **Sentry**: For error logging.  
+
+This application uses Drizzle ORM with PostgreSQL for storing user-specific settings and other data.
 
 ## "Made on ZAPT" Badge
 

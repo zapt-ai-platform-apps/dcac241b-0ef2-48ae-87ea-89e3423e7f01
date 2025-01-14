@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient';
+import React from 'react';
+import { useSession } from './hooks/useSession';
+import { useUserSettings } from './hooks/useUserSettings';
 
 import AuthComponent from './components/Auth';
 import Layout from './components/Layout';
@@ -10,24 +11,21 @@ import Rewards from './components/Rewards';
 import Settings from './components/Settings';
 
 export default function App() {
-  const [session, setSession] = useState(null);
-  const [view, setView] = useState('home');
+  const { session, onAuthChange, handleSignOut } = useSession();
+  const { theme, voiceSpeed, fetchUserSettings } = useUserSettings(session);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      console.log('[App] Current session:', data.session);
-      setSession(data.session);
-    });
+  const [view, setView] = React.useState('home');
+
+  React.useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) setView(hash);
+    const onHashChange = () => {
+      const newHash = window.location.hash.replace('#', '');
+      setView(newHash || 'home');
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
-
-  const onAuthChange = (newSession) => {
-    setSession(newSession);
-  };
-
-  const handleSignOut = async () => {
-    console.log('[App] Handling sign out');
-    await supabase.auth.signOut();
-  };
 
   const renderView = () => {
     switch (view) {
@@ -40,29 +38,22 @@ export default function App() {
       case 'rewards':
         return <Rewards />;
       case 'settings':
-        return <Settings />;
+        return (
+          <Settings
+            refreshSettings={fetchUserSettings}
+          />
+        );
       default:
         return <Home />;
     }
   };
-
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash) setView(hash);
-    const onHashChange = () => {
-      const newHash = window.location.hash.replace('#', '');
-      setView(newHash || 'home');
-    };
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
 
   if (!session) {
     return <AuthComponent onAuthChange={onAuthChange} />;
   }
 
   return (
-    <Layout onSignOut={handleSignOut}>
+    <Layout onSignOut={handleSignOut} appTheme={theme}>
       {renderView()}
     </Layout>
   );
